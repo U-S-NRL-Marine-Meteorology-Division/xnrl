@@ -1,0 +1,48 @@
+name: xnrl
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - pip
+  - git
+
+  # Tools
+  # -----
+  - cartopy>=0.20.1
+  - cfgrib
+  - dask
+  - eccodes
+  - h5netcdf
+  - h5py
+  - jupyter
+  - jupyterlab>=3
+  - matplotlib
+  - metpy
+  - netcdf4
+  - numpy
+  - pandas
+  - pygrib
+  - tqdm
+  - xarray
+
+  - xesmf # Not available on PC
+  - esmpy # Not available on PC
+
+  # Formatters and testing
+  # ----------------------
+  - black
+  - isort
+  - pytest
+
+  - pip:
+      - git+https://github.com/U-S-NRL-Marine-Meteorology-Division/xnrl.git
+###############################################################################
+# Create environment
+#
+#   conda env create -f environment_xnrl.yml
+#
+# Update environment
+#
+#   conda env update -f environment_xnrl.yml
+#
