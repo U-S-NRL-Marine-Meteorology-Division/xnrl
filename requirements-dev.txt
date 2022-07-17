@@ -1,0 +1,11 @@
+pytest
+black
+flake8
+mkdocs
+mkdocs-material
+mkdocstrings[python]
+isort
+pre-commit
+mkdocs-gen-files
+interrogate
+coverage
