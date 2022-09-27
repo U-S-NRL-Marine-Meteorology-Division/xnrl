@@ -23,11 +23,17 @@ from setuptools import setup
 with open(join(dirname(realpath(__file__)), 'VERSION'), encoding='utf-8') as version_file:
     version = version_file.read().strip()
 
+# read the contents of your README file
+from pathlib import Path
+this_directory = Path(__file__).parent
+long_description = (this_directory / "README.md").read_text()
+
 setup(
     name="xnrl",
     version=version,
     description="xNRL - Read NRL files into xarray Datasets nested within pandas DataFrames",
-    long_description="xNRL helps you read NRL NWP output into xarray Datasets nested within Pandas DataFrames.",
+    long_description=long_description,
+    long_description_content_type='text/markdown'
     packages=["xnrl"],
     include_package_data=True,
     install_requires=["numpy", "xarray==0.16.2", "dask[delayed]", "metpy"],
