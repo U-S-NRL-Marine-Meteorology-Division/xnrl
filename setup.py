@@ -33,7 +33,7 @@ setup(
     version=version,
     description="xNRL - Read NRL files into xarray Datasets nested within pandas DataFrames",
     long_description=long_description,
-    long_description_content_type='text/markdown'
+    long_description_content_type='text/markdown',
     packages=["xnrl"],
     include_package_data=True,
     install_requires=["numpy", "xarray==0.16.2", "dask[delayed]", "metpy"],
