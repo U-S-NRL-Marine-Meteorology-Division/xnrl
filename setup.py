@@ -18,7 +18,7 @@
 '''Python setup script for xnrl package'''
 
 from os.path import realpath, join, dirname
-from setuptools import setup
+from distutils.core import setup
 
 with open(join(dirname(realpath(__file__)), 'VERSION'), encoding='utf-8') as version_file:
     version = version_file.read().strip()
