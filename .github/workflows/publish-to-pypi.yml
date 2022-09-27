@@ -14,12 +14,7 @@ jobs:
       with:
         python-version: '3.10' 
     - run: >-
-        python -m
-        build
-        --sdist
-        --wheel
-        --outdir dist/
-        .
+        python setup.py sdist
     - name: Publish package to TestPyPI
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
