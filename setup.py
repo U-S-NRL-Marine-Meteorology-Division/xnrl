@@ -27,6 +27,7 @@ setup(
     name="xnrl",
     version=version,
     description="xNRL - Read NRL files into xarray Datasets nested within pandas DataFrames",
+    long_description="xNRL helps you read NRL NWP output into xarray Datasets nested within Pandas DataFrames.",
     packages=["xnrl"],
     include_package_data=True,
     install_requires=["numpy", "xarray==0.16.2", "dask[delayed]", "metpy"],
