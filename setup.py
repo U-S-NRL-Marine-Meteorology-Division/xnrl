@@ -17,16 +17,12 @@
 
 '''Python setup script for xnrl package'''
 
-from os.path import realpath, join, dirname
 from distutils.core import setup
-
-with open(join(dirname(realpath(__file__)), 'VERSION'), encoding='utf-8') as version_file:
-    version = version_file.read().strip()
-
-# read the contents of your README file
 from pathlib import Path
+
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
+version = (this_directory / "VERSION").read_text()
 
 setup(
     name="xnrl",
