@@ -1,15 +1,15 @@
 # # Distribution Statement A. Approved for public release. Distribution unlimited.
-# # 
+# #
 # # Author:
 # # Naval Research Laboratory, Marine Meteorology Division
-# # 
+# #
 # # This program is free software:
 # # you can redistribute it and/or modify it under the terms
 # # of the NRLMMD License included with this program.
 # # If you did not receive the license, see
 # # https://github.com/U-S-NRL-Marine-Meteorology-Division/
 # # for more information.
-# # 
+# #
 # # This program is distributed WITHOUT ANY WARRANTY;
 # # without even the implied warranty of MERCHANTABILITY
 # # or FITNESS FOR A PARTICULAR PURPOSE.
@@ -24,6 +24,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import xnrl.constant as C
+import xarray as xr
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from xnrl import compute, util
 
@@ -222,7 +223,12 @@ def _plot(
                 ax.grid(color="gray", alpha=0.3)
             else:
                 if y in da_ovl.dims and x in da_ovl.dims:
-                    da_ovl = da_ovl.transpose(y, x)
+                    if("missing_dims" in xr.Dataset.transpose.__code__.co_varnames):
+                        # Xarray 0.16 ignored by default. New versions raise exception by default.
+                        da_ovl = da_ovl.transpose(y, x, missing_dims="ignore")
+                    else:
+                        #Backwards Compatible for transpose.
+                        da_ovl = da_ovl.transpose(y, x)
 
                 plot_args = (da_ovl[x], da_ovl[y], da_ovl.values)
                 plot_kwds = dict(transform=transform, shading="auto")
