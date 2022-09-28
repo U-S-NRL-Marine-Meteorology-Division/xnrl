@@ -32,7 +32,7 @@ setup(
     long_description_content_type='text/markdown',
     packages=["xnrl"],
     include_package_data=True,
-    install_requires=["numpy", "xarray==0.16.2", "dask[delayed]", "metpy"],
+    install_requires=["numpy", "xarray", "tqdm", "dask[delayed]", "metpy"],    
     keywords=["flatfile", "nrl", "xarray", "dataset", "binary", "hdf5", "grib"],
     entry_points={
         "console_scripts": [
