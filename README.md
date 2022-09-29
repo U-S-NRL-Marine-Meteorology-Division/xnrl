@@ -24,7 +24,7 @@
 
 <!-- Badges -->
 
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) ![PyPI](https://img.shields.io/pypi/v/xnrl) [![Publish to PyPI](https://github.com/U-S-NRL-Marine-Meteorology-Division/xnrl/actions/workflows/publish-to-pypi.yml/badge.svg)](https://github.com/U-S-NRL-Marine-Meteorology-Division/xnrl/actions/workflows/publish-to-pypi.yml)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) [![PyPI](https://img.shields.io/pypi/v/xnrl)](https://pypi.org/project/xnrl/) [![Publish to PyPI](https://github.com/U-S-NRL-Marine-Meteorology-Division/xnrl/actions/workflows/publish-to-pypi.yml/badge.svg)](https://github.com/U-S-NRL-Marine-Meteorology-Division/xnrl/actions/workflows/publish-to-pypi.yml)
 
 <!-- (Badges) -->
 </div>
