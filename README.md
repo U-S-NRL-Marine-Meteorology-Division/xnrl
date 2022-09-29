@@ -20,11 +20,11 @@
   align="center"
 >
 
-# <p style="text-align:center"><img src="images/logo.png" width=250>
+# <p style="text-align:center"><img src="https://github.com/U-S-NRL-Marine-Meteorology-Division/xnrl/blob/main/images/logo.png?raw=true" width=250>
 
 <!-- Badges -->
 
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) ![PyPI](https://img.shields.io/pypi/v/xnrl) [![Publish to PyPI](https://github.com/U-S-NRL-Marine-Meteorology-Division/xnrl/actions/workflows/publish-to-pypi.yml/badge.svg)](https://github.com/U-S-NRL-Marine-Meteorology-Division/xnrl/actions/workflows/publish-to-pypi.yml)
 
 <!-- (Badges) -->
 </div>
@@ -33,6 +33,11 @@
 
 # Install
 xNRL requires numpy, pandas, and xarray.
+
+## Install with pip
+```bash
+pip install xnrl
+```
 
 ## Clone and install with pip
 ```bash

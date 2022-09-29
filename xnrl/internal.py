@@ -1,15 +1,15 @@
 # # Distribution Statement A. Approved for public release. Distribution unlimited.
-# # 
+# #
 # # Author:
 # # Naval Research Laboratory, Marine Meteorology Division
-# # 
+# #
 # # This program is free software:
 # # you can redistribute it and/or modify it under the terms
 # # of the NRLMMD License included with this program.
 # # If you did not receive the license, see
 # # https://github.com/U-S-NRL-Marine-Meteorology-Division/
 # # for more information.
-# # 
+# #
 # # This program is distributed WITHOUT ANY WARRANTY;
 # # without even the implied warranty of MERCHANTABILITY
 # # or FITNESS FOR A PARTICULAR PURPOSE.
@@ -957,8 +957,12 @@ class NRLFile(object):
                     f"Sub-selected for {self._lev_type} "
                     f"{self._grid_dim} successfully!"
                 )
-                ds = ds.transpose(*C.BASE_DIMS + [...])
-
+                if "missing_dims" in xr.Dataset.transpose.__code__.co_varnames:
+                    # Xarray 0.16 ignored by default. New versions raise exception by default.
+                    ds = ds.transpose(*C.BASE_DIMS + [...], missing_dims="ignore")
+                else:
+                    # Backwards Compatible for transpose.
+                    ds = ds.transpose(*C.BASE_DIMS + [...])
                 num_groups = selc_groupby.ngroups
                 if self.max_groups is not None and self.max_groups < num_groups:
                     num_groups = self.max_groups

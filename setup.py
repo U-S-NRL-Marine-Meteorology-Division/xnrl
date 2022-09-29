@@ -17,19 +17,22 @@
 
 '''Python setup script for xnrl package'''
 
-from os.path import realpath, join, dirname
 from setuptools import setup
+from pathlib import Path
 
-with open(join(dirname(realpath(__file__)), 'VERSION'), encoding='utf-8') as version_file:
-    version = version_file.read().strip()
+this_directory = Path(__file__).parent
+long_description = (this_directory / "README.md").read_text()
+version = (this_directory / "VERSION").read_text()
 
 setup(
     name="xnrl",
     version=version,
     description="xNRL - Read NRL files into xarray Datasets nested within pandas DataFrames",
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     packages=["xnrl"],
     include_package_data=True,
-    install_requires=["numpy", "xarray==0.16.2", "dask[delayed]", "metpy"],
+    install_requires=[ "xarray", "numpy", "dask[delayed]", "metpy"],    
     keywords=["flatfile", "nrl", "xarray", "dataset", "binary", "hdf5", "grib"],
     entry_points={
         "console_scripts": [

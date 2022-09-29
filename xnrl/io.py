@@ -1,15 +1,15 @@
 # # Distribution Statement A. Approved for public release. Distribution unlimited.
-# # 
+# #
 # # Author:
 # # Naval Research Laboratory, Marine Meteorology Division
-# # 
+# #
 # # This program is free software:
 # # you can redistribute it and/or modify it under the terms
 # # of the NRLMMD License included with this program.
 # # If you did not receive the license, see
 # # https://github.com/U-S-NRL-Marine-Meteorology-Division/
 # # for more information.
-# # 
+# #
 # # This program is distributed WITHOUT ANY WARRANTY;
 # # without even the implied warranty of MERCHANTABILITY
 # # or FITNESS FOR A PARTICULAR PURPOSE.
@@ -295,12 +295,22 @@ def export_flatfile(df, out_dir=C.WORK_DIR, show=False, fmt=None, sigma=False):
             else:
                 metadata["grid_dim"] = f"glob{num_x:03d}x{num_y:03d}"
 
-        ds_pre = (
-            ds.expand_dims(expand_dims)
-            .drop(["sig_w", "sig_m"], errors="ignore")
-            .stack(**{"dims_": stack_dims})
-            .transpose("dims_", *grid_dims)
-        )
+        if "missing_dims" in xr.Dataset.transpose.__code__.co_varnames:
+            # Xarray 0.16 ignored by default. New versions raise exception by default.
+            ds_pre = (
+                ds.expand_dims(expand_dims)
+                .drop_vars(["sig_w", "sig_m"], errors="ignore")
+                .stack(**{"dims_": stack_dims})
+                .transpose("dims_", *grid_dims, missing_dims="ignore")
+            )
+        else:
+            # Backwards Compatible for transpose.
+            ds_pre = (
+                ds.expand_dims(expand_dims)
+                .drop_vars(["sig_w", "sig_m"], errors="ignore")
+                .stack(**{"dims_": stack_dims})
+                .transpose("dims_", *grid_dims)
+            )
 
         out_fps = set([])
         missing_fps = set([])
@@ -308,13 +318,26 @@ def export_flatfile(df, out_dir=C.WORK_DIR, show=False, fmt=None, sigma=False):
             field_name = field.replace("_", "")
             metadata.update(**{"field": field_name})
             for slice_ in ds_pre[field]:
-                slice_ = slice_.transpose(
-                    *[
-                        dim
-                        for dim in C.BASE_DIMS + C.GRID_DIMS + C.XY_DIMS
-                        if dim in slice_.dims
-                    ]
-                )
+                if "missing_dims" in xr.Dataset.transpose.__code__.co_varnames:
+                    # Xarray 0.16 ignored by default. New versions raise exception by default.
+                    slice_ = slice_.transpose(
+                        *[
+                            dim
+                            for dim in C.BASE_DIMS + C.GRID_DIMS + C.XY_DIMS
+                            if dim in slice_.dims
+                        ],
+                        missing_dims="ignore",
+                    )
+                else:
+                    # Backwards Compatible for transpose.
+                    slice_ = slice_.transpose(
+                        *[
+                            dim
+                            for dim in C.BASE_DIMS + C.GRID_DIMS + C.XY_DIMS
+                            if dim in slice_.dims
+                        ]
+                    )
+
                 try:
                     exp, mbr, ini, tau, lev = np.atleast_1d(slice_["dims_"].values)[0]
                 except ValueError:
@@ -326,8 +349,7 @@ def export_flatfile(df, out_dir=C.WORK_DIR, show=False, fmt=None, sigma=False):
                     seconds = tau
                 mm, ss = divmod(seconds, 60)
                 hh, mm = divmod(mm, 60)
-
-                mbr = mbr if mbr != C.MASK_VALUE else 0
+                mbr = mbr if mbr != C.MASK_VALUE and np.isnan(mbr) == False else 0
                 metadata.update(
                     **{"mbr": mbr, "ini": ini, "hh": hh, "mm": mm, "ss": ss, "lev": lev}
                 )

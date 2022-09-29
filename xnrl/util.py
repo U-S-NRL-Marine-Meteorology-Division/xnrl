@@ -1,15 +1,15 @@
 # # Distribution Statement A. Approved for public release. Distribution unlimited.
-# # 
+# #
 # # Author:
 # # Naval Research Laboratory, Marine Meteorology Division
-# # 
+# #
 # # This program is free software:
 # # you can redistribute it and/or modify it under the terms
 # # of the NRLMMD License included with this program.
 # # If you did not receive the license, see
 # # https://github.com/U-S-NRL-Marine-Meteorology-Division/
 # # for more information.
-# # 
+# #
 # # This program is distributed WITHOUT ANY WARRANTY;
 # # without even the implied warranty of MERCHANTABILITY
 # # or FITNESS FOR A PARTICULAR PURPOSE.
@@ -516,8 +516,14 @@ def regrid(
     if "idx" in ds1.dims:
         ds1 = ds1.dropna("idx")
 
-    ds1 = ds1.transpose(*[..., "lat", "lon"])
-    ds2 = ds2.transpose(*[..., "lat", "lon"])
+    if "missing_dims" in xr.Dataset.transpose.__code__.co_varnames:
+        # Xarray 0.16 ignored by default. New versions raise exception by default.
+        ds1 = ds1.transpose(*[..., "lat", "lon"], missing_dims="ignore")
+        ds2 = ds2.transpose(*[..., "lat", "lon"], missing_dims="ignore")
+    else:
+        # Backwards Compatible for transpose.
+        ds1 = ds1.transpose(*[..., "lat", "lon"])
+        ds2 = ds2.transpose(*[..., "lat", "lon"])
 
     if locstream_in and method in ["bilinear", "nearest"]:
         method = "nearest_s2d"
@@ -646,10 +652,21 @@ def _interp_rebuild(da, var_y, var_x, data_list, dims, coords, to_irregular=Fals
         base_dims = ["tmp_dim", var_y, var_x]
 
     da_interp = xr.DataArray(
-        data_list, coords=coords, dims=base_dims, name=da.name, attrs=da.attrs,
+        data_list,
+        coords=coords,
+        dims=base_dims,
+        name=da.name,
+        attrs=da.attrs,
     )
     if len(dims) > 0:
-        da_interp = da_interp.unstack("tmp_dim").transpose(*dims + base_dims[1:])
+        if "missing_dims" in xr.Dataset.transpose.__code__.co_varnames:
+            # Xarray 0.16 ignored by default. New versions raise exception by default.
+            da_interp = da_interp.unstack("tmp_dim").transpose(
+                *dims + base_dims[1:], missing_dims="ignore"
+            )
+        else:
+            # Backwards Compatible for transpose.
+            da_interp = da_interp.unstack("tmp_dim").transpose(*dims + base_dims[1:])
     else:
         da_interp = da_interp.squeeze("tmp_dim")
     return da_interp
@@ -711,7 +728,11 @@ def _cross_section_2d(ds, var_y, var_x, ys, xs, method, num_steps):
 
     coords = np.concatenate((ys, xs))
     ds_cross = interpolate.cross_section(
-        ds, coords[:, 0], coords[:, 1], steps=num_steps, interp_type=method,
+        ds,
+        coords[:, 0],
+        coords[:, 1],
+        steps=num_steps,
+        interp_type=method,
     ).rename({"index": "idx"})
     remove_nan_list = [
         idx for idx in ds_cross["idx"].values if not np.isnan(ds_cross[var_y][idx])
